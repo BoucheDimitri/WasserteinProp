@@ -32,6 +32,7 @@ class Obtenir_la_densite_de_probabilitees:
         densite = lambda y : np.sum([K((y-x)/h) for x in echantillon])/(n*h)
         return densite
         
+    ''' pour la méthode des différences finies, on retourne une fonction '''
     def methode_differences_finies(self, agent, nsamples=1000):
         ''' je ne suis pas certain d'avoir compris comment accèder aux g_s(v), c'est pourquoi je suppose que inv_cdf(agent) = (g_{s_1}(agent),...,g_{s_n}(agent)), mais il faudra remplacer '''
         derivee = (inv_cdf(agent)[1:]-inv_cdf(agent)[:-1])/(nsamples-1)
