@@ -79,9 +79,18 @@ class InvCdf:
         self.cdf = np.array([self.invert(t) for t in self.ts])
 
     def get_pdf(self):
+        """
+        Discrete difference of self.cdf
+
+        Returns:
+            tuple: self.ts[1:], discrete difference of self.cdf
+        """
         return self.ts[1:], np.diff(self.cdf)
 
     def fill_rho_discrete(self):
+        """
+        Get discrete approximation of rho in encoding (values, probas of values)
+        """
         ts, pdf = self.get_pdf()
         inds = np.argwhere(pdf != 0)[:, 0]
         vals = ts[inds]
@@ -89,6 +98,9 @@ class InvCdf:
         self.rho = vals, probs
 
     def fill_rho_continuous(self):
+        """
+        Get continuous approximation of rho, returns an approximate density function
+        """
         ts, pdf = self.get_pdf()
 
         def rho_continuous(x):
@@ -98,6 +110,9 @@ class InvCdf:
         self.rho = rho_continuous
 
     def fill_rho(self):
+        """
+        Wrapper for fill_rho_discrete/fill_rho_continuous taking into account the density type
+        """
         if self.density_type == "continuous":
             self.fill_rho_continuous()
         else:
