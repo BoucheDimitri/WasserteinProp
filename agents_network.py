@@ -1,3 +1,21 @@
+ import numpy as np
+ 
+ 
+ class Agent:
+ 
+     def __init__(self, npeers, number, invcdf_sol):
+         """
+         Params:
+             npeers (int): number of agents (including the agent itself) in the network
+             number (int): the indice of the agent in the network
+             invcdf_sol (inv_cdfs.InvCdf): the inverse cdf encoding the agents' local model (g_sol)
+         """
+         self.invcdf_sol = invcdf_sol
+         self.number = number
+         self.npeers = npeers
+         self.models_matrix = np.zeros((invcdf_sol.qs.shape[0], npeers))
+         self.models_matrix[:, number] = self.invcdf_sol.y
+
     def update_exterior_model(self, j, new_ext_model):
         """
         Update one columns of the agents models matrix with a new model
@@ -40,8 +58,10 @@
         d = np.sum(w)
         new_model = alpha * np.sum((w / d) * self.models_matrix, axis=1)
         new_model += (1 - alpha) * c * self.invcdf_sol.y
-        
-        
+         new_model *= 1 / (alpha + (1 - alpha) * c)
+         self.set_model(new_model)
+ 
+ 
 class AgentNetwork:
 
     def __init__(self, W, C, agents, mu):
