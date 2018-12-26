@@ -47,7 +47,7 @@ class Obtenir_la_densite_de_probabilitees:
     ''' plutôt dans le cas discret '''
     def methode_fct_repartition(self, agent, nsamples):
         cdf_inv_bis, uniq_inv = np.unique(inv_cdf(agent), unique_inverse=True)
-        ensemble_des_valeurs = (cdf_inv_bis[1:] + cdf_inv_bis[;-1])/2
+        ensemble_des_valeurs = (cdf_inv_bis[1:] + cdf_inv_bis[:-1])/2
         S = self.pts_discretisation[uniq_inv]
         prob = S[1:]-S[:-1]
         return ensemble_des_valeurs, prob
