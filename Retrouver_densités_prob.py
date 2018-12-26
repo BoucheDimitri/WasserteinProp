@@ -28,7 +28,7 @@ class Obtenir_la_densite_de_probabilitees:
     def methode_Noyau(self, agent, K=norm.pdf, nsamples=1000):
         echantillon = draw(agent, nsamples)
         sigma = echantillon.std()
-        h = sigma/nsamples**(0.2)# thumb rule
+        h = sigma/nsamples**(0.2) # thumb rule
         densite = lambda y : np.sum([K((y-x)/h) for x in echantillon])/(n*h)
         return densite
         
