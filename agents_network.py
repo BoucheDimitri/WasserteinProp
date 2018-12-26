@@ -1,4 +1,5 @@
 import numpy as np
+import inv_cdfs as icdf
 
 
 class Agent:
@@ -11,6 +12,7 @@ class Agent:
             invcdf_sol (inv_cdfs.InvCdf): the inverse cdf encoding the agents' local model (g_sol)
         """
         self.invcdf_sol = invcdf_sol
+        self.invcdf_model = None
         self.number = number
         self.npeers = npeers
         self.models_matrix = np.zeros((invcdf_sol.qs.shape[0], npeers))
@@ -64,6 +66,12 @@ class Agent:
         new_model *= 1 / (alpha + (1 - alpha) * c)
         self.set_model(new_model)
 
+    def update_invcdf_model(self):
+        """
+        Fill self.invcdf_model with a icdf.InvCdf object containing the agents last version of its model
+        """
+        self.invcdf_model = icdf.InvCdf(invcdf_vec=self.get_model())
+
 
 class AgentNetwork:
 
@@ -80,6 +88,9 @@ class AgentNetwork:
         self.agents = agents
         self.mu = mu
         self.alpha = 1 / (1 + mu)
+
+    def get_nagents(self):
+        return len(self.agents)
 
     def get_neighbors(self, i):
         """
@@ -150,6 +161,17 @@ class AgentNetwork:
         """
         for t in range(0, nit):
             self.async_gossip_step()
+
+    def update_invcdf_models(self):
+        """
+        Forall agents a in the network, do a.update_invcdf_model
+        Meaning that : fill a.invcdf_model with a icdf.InvCdf object containing each agents last version of its model
+        """
+        nagents = self.get_nagents()
+        for i in range(0, nagents):
+            self.agents[i].update_invcdf_model()
+
+
 
 
 
