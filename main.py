@@ -96,13 +96,3 @@ plt.legend()
 plt.title("Propagated cdfs")
 
 
-
-
-
-
-
-# Create empty InvCdf instances
-invcdf1 = icdf.InvCdf()
-invcdf2 = icdf.InvCdf()
-invcdf3 = icdf.InvCdf()
-invcdf4 = icdf.InvCdf()

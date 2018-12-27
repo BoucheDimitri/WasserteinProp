@@ -16,7 +16,7 @@ class Agent:
         self.number = number
         self.npeers = npeers
         self.models_matrix = np.zeros((invcdf_sol.qs.shape[0], npeers))
-        self.models_matrix[:, number] = self.invcdf_sol.y
+        self.models_matrix[:, number] = self.invcdf_sol.invcdf
 
     def update_exterior_model(self, j, new_ext_model):
         """
@@ -43,7 +43,7 @@ class Agent:
         Returns:
             np.ndarray: The agent's original model
         """
-        return self.invcdf_sol.y
+        return self.invcdf_sol.invcdf
 
     def set_model(self, new_model):
         """
@@ -62,7 +62,7 @@ class Agent:
         """
         d = np.sum(w)
         new_model = alpha * np.sum((w / d) * self.models_matrix, axis=1)
-        new_model += (1 - alpha) * c * self.invcdf_sol.y
+        new_model += (1 - alpha) * c * self.invcdf_sol.invcdf
         new_model *= 1 / (alpha + (1 - alpha) * c)
         self.set_model(new_model)
 
