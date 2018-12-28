@@ -1,5 +1,6 @@
 import numpy as np
 import bisect
+import scipy.stats as stats
 
 
 class InvCdf:
@@ -78,7 +79,7 @@ class InvCdf:
         self.ts = np.linspace(start, stop, nsamples_cdf)
         self.cdf = np.array([self.invert(t) for t in self.ts])
 
-    def get_pdf(self):
+    def get_diff_discrete(self):
         """
         Discrete difference of self.cdf
 
@@ -87,37 +88,28 @@ class InvCdf:
         """
         return self.ts[1:], np.diff(self.cdf)
 
-    def fill_rho_discrete(self):
+    def fill_rho_discrete(self, thresh=0.0002):
         """
         Get discrete approximation of rho in encoding (values, probas of values)
         """
-        ts, pdf = self.get_pdf()
-        inds = np.argwhere(pdf != 0)[:, 0]
+        ts, pdf = self.get_diff_discrete()
+        inds = np.argwhere(pdf > thresh)[:, 0]
         vals = ts[inds]
         probs = pdf[inds]
         self.rho = vals, probs
 
-    def fill_rho_continuous(self):
-        """
-        Get continuous approximation of rho, returns an approximate density function
-        """
-        ts, pdf = self.get_pdf()
+    def get_diff_continuous(self, nbins):
+        binsize = self.ts.shape[0] // nbins
+        cdf_bins = self.cdf[0::binsize]
+        ts_bins = self.ts[0::binsize]
+        return ts_bins[:-1] + np.diff(ts_bins) / 2, np.diff(cdf_bins)
+
+    def fill_rho_continuous(self, nbins):
+        middle_bins, cdf_bins = self.get_diff_continuous(nbins)
 
         def rho_continuous(x):
-            y = np.interp(np.array([x]), ts, pdf)
+            y = np.interp(np.array([x]), middle_bins, cdf_bins)
             return y[0]
 
         self.rho = rho_continuous
-
-    def fill_rho(self):
-        """
-        Wrapper for fill_rho_discrete/fill_rho_continuous taking into account the density type
-        """
-        if self.density_type == "continuous":
-            self.fill_rho_continuous()
-        else:
-            self.fill_rho_discrete()
-
-
-
 
