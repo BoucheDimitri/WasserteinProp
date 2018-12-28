@@ -107,5 +107,41 @@ def plot_invcdf_cdf_pdf_continuous(models_sol, models_final):
     axes[1, 2].set_title("Learnt PDF")
 
 
+def plot_invcdf_cdf_pdf_discrete(models_sol, models_final):
+    # fig, axes = plt.subplots(nrows=2, ncols=3)
+    fig, axes = plt.subplots(nrows=2, ncols=2)
+    qs = models_sol[0].qs
+    ts = models_sol[0].ts
+    for i in range(len(models_sol)):
+        axes[0, 0].plot(qs, models_sol[i].invcdf, label=i)
+        axes[1, 0].plot(qs, models_final[i].invcdf, label=i)
+    axes[0, 0].legend()
+    axes[0, 0].set_title("Solitary Inverse CDF")
+    axes[1, 0].legend()
+    axes[1, 0].set_title("Learnt Inverse CDF")
+    for i in range(len(models_sol)):
+        axes[0, 1].plot(ts, models_sol[i].cdf, label=i)
+        axes[1, 1].plot(ts, models_final[i].cdf, label=i)
+    axes[0, 1].legend()
+    axes[0, 1].set_title("Solitary CDF")
+    axes[1, 1].legend()
+    axes[1, 1].set_title("Learnt CDF")
+    # for i in range(len(models_sol)):
+    #     axes[0, 2].plot(models_sol[i].rho[0], models_sol[i].rho[1], label=i)
+    #     axes[1, 2].scatter(models_final[i].rho[0], models_final[i].rho[1], label=i)
+    # axes[0, 2].legend()
+    # axes[0, 2].set_title("Solitary PDF")
+    # axes[1, 2].legend()
+    # axes[1, 2].set_title("Learnt PDF")
+
+
+def plot_pdf_discrete(models_sol, models_final):
+    fig, axes = plt.subplots(nrows=2, ncols=3)
+    for i in range(len(models_final)):
+        axes[1, i].bar(models_final[i].rho[0], models_final[i].rho[1], width=0.1, color="C" + str(i))
+        axes[1, i].set_title("Learned PDF")
+        axes[0, i].bar(models_sol[i].rho[0], models_sol[i].rho[1], width=0.1, color="C" + str(i))
+        axes[0, i].set_title("Solitary PDF")
+    plt.suptitle("PDF comparison - Solitary and learnt")
 
 
