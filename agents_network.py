@@ -171,6 +171,25 @@ class AgentNetwork:
         for i in range(0, nagents):
             self.agents[i].update_invcdf_model()
 
+    def fill_cdfs(self, start, stop, nsamples_cdf):
+        nagents = self.get_nagents()
+        for i in range(0, nagents):
+            self.agents[i].invcdf_model.fill_cdf(start, stop, nsamples_cdf)
+            self.agents[i].invcdf_sol.fill_cdf(start, stop, nsamples_cdf)
+
+    def fill_rho_discrete(self, thresh=0.0002):
+        nagents = self.get_nagents()
+        for i in range(0, nagents):
+            self.agents[i].invcdf_model.fill_rho_discrete(thresh)
+            self.agents[i].invcdf_sol.fill_rho_discrete(thresh)
+
+    def fill_rho_continuous(self, nbins=30):
+        nagents = self.get_nagents()
+        for i in range(0, nagents):
+            self.agents[i].invcdf_model.fill_rho_continuous(nbins)
+            self.agents[i].invcdf_sol.fill_rho_continuous(nbins)
+
+
 
 
 
