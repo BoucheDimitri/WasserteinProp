@@ -86,15 +86,15 @@ class InvCdf:
         Returns:
             tuple: self.ts[1:], discrete difference of self.cdf
         """
-        return self.ts[1:], np.diff(self.cdf)
+        return np.diff(self.cdf)
 
     def fill_rho_discrete(self, thresh=0.0002):
         """
         Get discrete approximation of rho in encoding (values, probas of values)
         """
-        ts, pdf = self.get_diff_discrete()
+        pdf = self.get_diff_discrete()
         inds = np.argwhere(pdf > thresh)[:, 0]
-        vals = ts[inds]
+        vals = self.ts[inds + 1]
         probs = pdf[inds]
         self.rho = vals, probs
 
@@ -102,7 +102,7 @@ class InvCdf:
         binsize = self.ts.shape[0] // nbins
         cdf_bins = self.cdf[0::binsize]
         ts_bins = self.ts[0::binsize]
-        return ts_bins[:-1] + np.diff(ts_bins) / 2, np.diff(cdf_bins)
+        return ts_bins[:-1] + np.diff(ts_bins) / 2, np.diff(cdf_bins)/(np.sum(np.diff(cdf_bins)))
 
     def fill_rho_continuous(self, nbins):
         middle_bins, cdf_bins = self.get_diff_continuous(nbins)
