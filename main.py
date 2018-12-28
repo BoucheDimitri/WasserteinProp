@@ -22,7 +22,7 @@ plt.rcParams.update({"lines.markersize": 5})
 a, b = [0.5, 0.1, 0.8], [0.5, 0.8, 0.1]
 betas = [stats.beta(a[i], b[i]) for i in range(len(a))]
 
-# Fill InvCdf instances with the beta distribution
+# Fill InvCdf instances with the beta distributions
 invcdfs = utils.invcdfs_from_distrib(betas, nsamples_icdf=10000)
 
 # Plot the invcdfs
@@ -50,7 +50,7 @@ k2 = 4
 utils.plot_aga_iterations(network, k1, k2)
 
 
-# ######## PROPAGATED CDF AND PDF ######################################################################################
+# ######## PROPAGATED CDF AND PDF: BETA CASE ###########################################################################
 # Number of agents in the network
 npeers = 3
 
@@ -73,7 +73,6 @@ models_sol, models_final = utils.extract_models_continuous(network,
                                                            start_cdf=0,
                                                            stop_cdf=1,
                                                            nsamples_cdf=10000,
-                                                           nbins=30)
+                                                           nbins=100)
 
 utils.plot_invcdf_cdf_pdf_continuous(models_sol, models_final)
-
